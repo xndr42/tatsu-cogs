@@ -63,7 +63,7 @@ class celestial:
                 #If we have only 3 minutes remaining, send notification to server
                 if time_left <= 180:
                     if flag == -1:
-                        spawn_msg = await self.bot.say(" here " + boss[i] + " spawning in 3 minutes! (if order is wrong PM " + OWNER + ")")
+                        spawn_msg = await self.bot.say("@here " + boss[i] + " spawning in 3 minutes! (if order is wrong PM " + OWNER + ")")
                         flag = 0
 
                 #If the boss has spawned, then move boss index accordingly and delete notification message
