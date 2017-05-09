@@ -67,7 +67,7 @@ class celestial:
 
                 #If the boss has spawned, then move boss index accordingly and delete notification message
                 #Timer sometimes jumps over 0s so we need some leeway
-                if time_left <= 1:
+                if time_left <= 2:
                     await self.bot.delete_message(spawn_msg)
                     if i == 2:
                         i = 0
