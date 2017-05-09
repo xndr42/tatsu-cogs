@@ -1,13 +1,3 @@
-# tatsu-cogs
-## Synopsis
-This is a cog (module) for Red-DiscordBot.  
-This cog is designed for the MMO game Blade & Soul.  
-The purpose is to provide an accurate countdown until the spawn of the next event boss.  
-
-## Motivation
-A lot of the players either don't have a timer or don't want to bother keeping track of the time themselves.  
-This module will display a countdown until the next spawn and will send a notification to the channel at the 3min mark.
-
 ## Installation
 1. Download Red-DiscordBot and follow their installation instructions: https://github.com/Twentysix26/Red-DiscordBot
 2. Copy the "celestial.py" folder to the "cogs" directory of your bot.
