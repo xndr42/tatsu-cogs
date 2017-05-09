@@ -1,0 +1,85 @@
+from discord.ext import commands
+import asyncio
+import datetime
+class celestial:
+    """BNS Celestial Basin Countdown Timer"""
+
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.command(pass_context = True)
+    
+    #param i_str = previous boss (0 = Aomak, 1 = Excavation, 2 = Snapjaw
+    #param month_str, day_str, hour_str, min_str are month/day/hour/minute of any previous boss spawn
+    async def countdown(self, ctx, i_str, month_str, day_str, hour_str, min_str):
+
+        ############## CHANGE ONLY THESE VARIABLES TO SUIT YOUR NEEDS #####################
+        #String to hold the names of your server group
+        SERVER = "Mushin/OMC"
+        #
+        #String to hold your name so people can message you if something goes wrong
+        OWNER = "Tatsu"
+        ####################################################################################
+
+        #Length of time between boss spawns 43min (in seconds)
+        BOSS_CD = 2580
+        
+        #List to hold boss names
+        #boss = ["Aomak", "Excavation", "Croxar"]
+        boss = ["Aomak Temple", "Excavation Site", "Croxar Camp", "Unknown"]
+        
+        #Convert boss identifier to integer
+        i = int(i_str)
+        
+        #Initial countdown message that bot will edit continuously
+        countdown_msg = await self.bot.say("```css" + "\n" + "[" + boss[i] + "] - [" + SERVER + "] " + "\nTimer: xx minutes ```")
+
+        #Time of the previous boss spawn
+        known_spawn = datetime.datetime(year=2017, month=int(month_str), day=int(day_str), hour=int(hour_str), minute=int(min_str), second=0)
+
+        #Infinite loop because I don't want to do conditionals with datetime
+        while True:
+            
+            #Figure out current time
+            now = datetime.datetime.now()
+
+            #Flag to keep track if spawn_msg was successfully created
+            #Timer sometimes jumps past 180 so we need some leeway
+            #But we don't want multiple messages
+            flag = -1
+
+            #Keep going until timer <= 1 then break out
+            while True:
+
+                #Figure out current time
+                now = datetime.datetime.now()
+
+                #Figure out how many minutes and seconds are remaining
+                cur_min = (BOSS_CD - ((now - known_spawn).seconds) % BOSS_CD) // 60
+                cur_sec = (BOSS_CD - ((now - known_spawn).seconds) % BOSS_CD) % 60
+                time_left = (cur_min * 60) + cur_sec
+
+                #If we have only 3 minutes remaining, send notification to server
+                if time_left <= 180:
+                    if flag == -1:
+                        spawn_msg = await self.bot.say("@here " + boss[i] + " spawning in 3 minutes! (if order is wrong PM " + OWNER + ")")
+                        flag = 0
+
+                #If the boss has spawned, then move boss index accordingly and delete notification message
+                #Timer sometimes jumps over 0s so we need some leeway
+                if time_left <= 1:
+                    await self.bot.delete_message(spawn_msg)
+                    if i == 2:
+                        i = 0
+                    elif i < 2:
+                        i += 1
+                    else:
+                        i = 3
+                    break
+
+                #Have to subtract the seconds in our minutes from our total seconds
+                await self.bot.edit_message(countdown_msg, new_content=("```css" + "\n" + "[" + boss[i] + "] - [" + SERVER + "] " + "\nTimer: " + str(cur_min) + " minutes and " + str(cur_sec) + " seconds  ```"))
+                await asyncio.sleep(1)
+
+def setup(bot):
+    bot.add_cog(celestial(bot))

@@ -1,0 +1,8 @@
+{
+    "AUTHOR" : "Tatsu",
+    "DESCRIPTION" : "[Blade & Soul] Counts down the time remaining until event boss spawns in Celestial Basin.",
+    "DISABLED" : false,
+    "INSTALL_MSG" : "Thanks for installing, hope it suits your needs.",
+    "NAME" : "tatsu-cogs",
+    "SHORT" : "Celestial Basin Countdown"
+}
