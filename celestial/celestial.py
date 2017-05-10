@@ -12,7 +12,7 @@ class celestial:
     
     #param i_str = previous boss (0 = Aomak, 1 = Excavation, 2 = Snapjaw
     #param month_str, day_str, hour_str, min_str are month/day/hour/minute of any previous boss spawn
-    async def countdown(self, ctx, i_str, month_str, day_str, hour_str, min_str):
+    async def countdown(self, ctx, i_str, month_str, day_str, hour_str, min_str, min_sec, order):
 
         ############## CHANGE ONLY THESE VARIABLES TO SUIT YOUR NEEDS #####################
         #String to hold the names of your server group
@@ -36,7 +36,7 @@ class celestial:
         countdown_msg = await self.bot.say("```css" + "\n" + "[" + boss[i] + "] - [" + SERVER + "] " + "\nTimer: xx minutes ```")
 
         #Time of the previous boss spawn
-        known_spawn = datetime.datetime(year=2017, month=int(month_str), day=int(day_str), hour=int(hour_str), minute=int(min_str), second=0)
+        known_spawn = datetime.datetime(year=2017, month=int(month_str), day=int(day_str), hour=int(hour_str), minute=int(min_str), second=int(min_sec))
 
         #Infinite loop because I don't want to do conditionals with datetime
         while True:
@@ -59,12 +59,18 @@ class celestial:
                 cur_min = (BOSS_CD - ((now - known_spawn).seconds) % BOSS_CD) // 60
                 cur_sec = (BOSS_CD - ((now - known_spawn).seconds) % BOSS_CD) % 60
                 time_left = (cur_min * 60) + cur_sec
-
-                #If we have only 3 minutes remaining, send notification to server
-                if time_left <= 180:
-                    if flag == -1:
-                        spawn_msg = await self.bot.say("@here " + boss[i] + " spawning in 3 minutes! (if order is wrong PM " + OWNER + ")")
-                        flag = 0
+                
+                #Give 5min or 3min warning depending on if we know boss rotation or not
+                if i == 3:
+                    if time_left <= 300:
+                        if flag == -1:
+                            spawn_msg = await self.bot.say("@here " + boss[i] + " spawning in 5 minutes! (if order is wrong PM " + OWNER + ")")
+                            flag = 0
+                else:
+                    if time_left <= 180:
+                        if flag == -1:
+                            spawn_msg = await self.bot.say("@here " + boss[i] + " spawning in 3 minutes! (if order is wrong PM " + OWNER + ")")
+                            flag = 0
 
                 #If the boss has spawned, then move boss index accordingly and delete notification message
                 #Timer sometimes jumps over 0s so we need some leeway
@@ -79,12 +85,21 @@ class celestial:
                 await asyncio.sleep(1)
 
             #Move boss index accordingly
-            if i == 2:
-                i = 0
-            elif i == 3:
-                i = 3
+            #Assumed counter-clockwise unless stated otherwise
+            if order.lower() == 'cw':
+                if i == 0:
+                    i = 2
+                elif i == 3:
+                    i = 3
+                else:
+                    i -= 1
             else:
-                i += 1
+                if i == 2:
+                    i = 0
+                elif i == 3:
+                    i = 3
+                else:
+                    i += 1
 
 def setup(bot):
     bot.add_cog(celestial(bot))
