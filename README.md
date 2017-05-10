@@ -8,11 +8,11 @@
 
 ## Usage
 Once the bot is in your server, use the following command to start the timer:  
-`[p]countdown next_boss month day hour minute`  
+`[p]countdown next_boss month day hour minute second order`  
 
 `Note: [p] is whatever prefix you setup with your bot.`
 
------------
+***
 `next_boss` is the next boss that should spawn in your rotation. The following values are valid:
 ```
 0 = Aomak Temple
@@ -21,11 +21,16 @@ Once the bot is in your server, use the following command to start the timer:
 3 = Unknown
 ```
 If your rotation is not following the standard pattern, it might be best to set it as unknown.  
-It will stay as unknown until you create a new countdown when the order stabilizes.
-
------------
-`month/day/hour/minute` is the time of any known previous spawn.  
-Use 24hr notation (3pm = 15, 9pm = 21, etc)
+It will stay as unknown until you create a new countdown when the order stabilizes.  
+***
+`month/day/hour/minute/second` is the time of any known previous spawn.  
+Use 24hr notation (3pm = 15, 9pm = 21, etc)  
+***  
+`order` is the rotation order of the bosses.
+```
+cw = clockwise
+ccw = counter-clockwise
+```
 
 
 ## Where users can get help with the project
